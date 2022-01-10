@@ -38,11 +38,58 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-      viewModel.viewState.observe(viewLifecycleOwner, Observer {
+      viewModel.viewState1.observe(viewLifecycleOwner, Observer {
           binding.progressBar.visibility = if(it.isLoading)View.VISIBLE else View.GONE
           println("$it !!!!!!!!!!!")
       })
+        viewModel.viewState.observe(viewLifecycleOwner, {
+            println(it)
+        })
         viewModel.loadMore()
+        viewModel.startUpload()
+    }
+    private fun render(viewState: UploadViewState) {
+        when (viewState) {
+            Initial -> {
+                println("Initial")
+//                uploadProgressText.isVisible = false
+//                progressBar.isVisible = false
+//                uploadDoneIcon.isVisible = false
+//                uploadStatusText.isVisible = false
+//                retryUploadButton.isVisible = false
+            }
+            is UploadInProgress -> {
+                println("UploadInProgress ${viewState.percentage}")
+//                uploadProgressText.isVisible = true
+//                progressBar.isVisible = true
+//                uploadDoneIcon.isVisible = false
+//                uploadStatusText.isVisible = false
+//                retryUploadButton.isVisible = false
+//                progressBar.setProgressWithAnimation(
+//                    viewState.percentage.toFloat(),
+//                    ANIMATION_DURATION
+//                )
+//                uploadProgressText.text = "${viewState.percentage}%"
+            }
+           UploadFailed -> {
+               println("UploadFailed ")
+//                uploadProgressText.isVisible = false
+//                progressBar.isVisible = false
+//                uploadDoneIcon.isVisible = false
+//                uploadStatusText.isVisible = true
+//                uploadStatusText.text = "Sorry, something went wrong."
+//                retryUploadButton.isVisible = true
+            }
+            UploadSuccess -> {
+                println(" UploadSuccess")
+//                uploadProgressText.isVisible = false
+//                progressBar.isVisible = false
+//                uploadDoneIcon.isVisible = true
+//                uploadStatusText.isVisible = true
+//                uploadStatusText.text = "Upload complete!"
+//                retryUploadButton.isVisible = false
+            }
+        }
     }
 
 }

@@ -9,16 +9,19 @@ import com.example.myproect.ProfileLoaded
 import com.example.myproect.ProfileViewState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
+import kotlin.random.nextLong
 
 class MainViewModel : ViewModel() {
+    val viewState = MutableLiveData<UploadViewState>()
 
-    val viewState = MutableLiveData<ListViewState>()
+    val viewState1 = MutableLiveData<ListViewState>()
     private var state: ListViewState
         get() {
-            return viewState.value!!
+            return viewState1.value!!
         }
         set(value) {
-            viewState.value = value
+            viewState1.value = value
         }
 
     init {
@@ -39,6 +42,40 @@ class MainViewModel : ViewModel() {
                 items = state.items + newWords
             )
         }
+    }
+    fun startUpload() {
+        viewModelScope.launch {
+            viewState.value = Initial
+            viewState.value = UploadInProgress(10)
+            delay1()
+            viewState.value = UploadInProgress(30)
+            delay1()
+            viewState.value = UploadInProgress(42)
+            delay1()
+            viewState.value = UploadInProgress(50)
+            delay1()
+
+            if (Random.nextBoolean()) {
+                viewState.value = UploadFailed
+                return@launch
+            }
+
+            viewState.value = UploadInProgress(70)
+            delay1()
+            viewState.value = UploadInProgress(90)
+            delay1()
+            viewState.value = UploadInProgress(94)
+            delay1()
+            viewState.value = UploadInProgress(99)
+            delay1()
+            viewState.value = UploadInProgress(100)
+
+            viewState.value = UploadSuccess
+        }
+    }
+
+    private suspend fun delay1() {
+        delay(Random.nextLong(500L..1200L))
     }
 
     private suspend fun getMoreWords(): List<String> {
